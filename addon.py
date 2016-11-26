@@ -4,43 +4,67 @@ import urllib, urlparse
 import xbmcgui, xbmc, xbmcaddon, xbmcplugin
 import urllib2, re
 
-main_menu = ([['play', 'Прямой эфир', 'live', 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-               'Круглосуточный телеканал Настоящее Время - прямая трасляция онлайн'
+main_menu = ([['play', '[B][COLOR blue]Прямой эфир[/COLOR][/B]', 'live', 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
+               'Круглосуточный телеканал "Настоящее Время" - прямая трасляция онлайн'
               ],
-              ['last_vids_fldr', 'Последние эфиры', 'lastall', '/z/17317.html',
-               'Эфиры телепередач за последние несколько деней.'
+              ['lastvids+next', '[B]Эфиры [/B]', 'folder', '/z/17317.html',
+               'Эфиры телепередач'
                ],
-               ['last_vids_fldr', 'Час Тимура Олевского', 'olevski', '/z/20333.html',
+              ['tvshows', '[B]Телепередачи[/B]', 'folder', '',
+               'Все телепередачи'
+               ],
+              ['lastvids+next', '[B]Все видео[/B]', 'folder', '/z/17192.html',
+               'Все видео'
+               ],
+              ['lastvids+next', '[B]Видео: Новости[/B]', 'folder', '/z/17250.html',
+               'Хроника дня'
+               ],
+              ['lastvids+next', '[B]Видео: Кадры дня[/B]', 'folder', '/z/17226.html',
+               'Кадры дня'
+               ],
+              ['lastvids+next', '[B]Видео: Репортажи[/B]', 'folder', '/z/17318.html',
+               'Репортажи'
+               ],
+              ['lastvids+next', '[B]Видео: Интервью[/B]', 'folder', '/z/17319.html',
+               'Мнения'
+               ]
+              ])
+
+tvshows =   ([['lastvids+archive', 'Час Тимура Олевского', 'olevski', '/z/20333.html',
                'Ежедневная телепередача \"Час Тимура Олевского\".\n'
                'Час Тимура Олевского – это самые интересные и важные события, за которыми следит команда наших журналистов. Мы не бежим за новостями, а находим их для вас. Мы показываем все точки зрения и рассказываем обо всем, что случилось в конце рабочего дня. С понедельника по пятницу.\n'
               ],
-              ['last_vids_fldr', 'Настоящее Время', 'nv', '/z/18657.html',
+              ['lastvids+archive', 'Настоящее Время - Европа', 'nveurope', '/z/18657.html',
                'Ежедневная телепередача \"Настоящее Время\".'
                ],
-              ['last_vids_fldr', 'Настоящее Время – Азия', 'nvasia', '/z/17642.html',
+              ['lastvids+archive', 'Настоящее Время – Азия', 'nvasia', '/z/17642.html',
                'Ежедневная телепередача \"Настоящее Время – Азия\".'
                ],
-              ['last_vids_fldr', 'Настоящее Время – Америка', 'nvamerica', '/z/20347.html',
+              ['lastvids+archive', 'Настоящее Время – Америка', 'nvamerica', '/z/20347.html',
                'Ежедневная телепередача \"Настоящее Время – Америка\".'
                ],
-              ['last_vids_fldr', 'Смотри в оба', 'oba', '/z/20366.html',
+              ['lastvids+archive', 'Смотри в оба', 'oba', '/z/20366.html',
                'Еженедельная передача \"Смотри в оба\".'
                ],
-              ['last_vids_fldr', 'Итоги', 'itogi', '/z/17499.html',
+              ['lastvids+archive', 'Итоги', 'itogi', '/z/17499.html',
                'Еженедельная итоговая телепередача \"Итоги\" (по субботам).'
                ],
-              ['last_vids_fldr', 'Неделя', 'week', '/z/17498.html',
+              ['lastvids+archive', 'Неделя', 'week', '/z/17498.html',
                'Еженедельная итоговая телепередача \"Неделя\" (по воскресеньям).'
                ],
-              ['last_vids_fldr', 'Балтия. Неделя', 'baltia', '/z/20350.html',
+              ['lastvids+archive', 'Балтия. Неделя', 'baltia', '/z/20350.html',
                'Еженедельная итоговая передача \"Балтия. Неделя\" (по субботам).'
                ],
-              ['last_vids_fldr', 'Бизнес-план', 'bisplan', '/z/20354.html',
+              ['lastvids+archive', 'Бизнес-план', 'bisplan', '/z/20354.html',
                'Еженедельная передача \"Бизнес-план\".'
                ],
-              ['last_vids_fldr', 'Неизвестная Россия', 'unknownrus', '/z/20331.html',
+              ['lastvids+archive', 'Неизвестная Россия', 'unknownrus', '/z/20331.html',
                'Цикл \"Неизвестная Россия\".'
-               ]])
+               ],
+              ['lastvids+archive', 'Ждем в гости', 'guests', '/z/20330.html',
+               'Ждем в гости с Зурабом Двали.'
+               ]
+               ])
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
@@ -49,7 +73,7 @@ args = urlparse.parse_qs(sys.argv[2][1:])
 mode = args.get('mode', None)
 furl = args.get('folderurl', None)
 ftitle = args.get('title', None)
-
+flevel = int(args.get('level', '0')[0])
 site_url = 'http://www.currenttime.tv'
 ptv = xbmcaddon.Addon('plugin.video.currenttime.tv')
 
@@ -67,15 +91,15 @@ def img_link(name, type):
     return image
 
 def addDir(arg):
-    li = xbmcgui.ListItem(label=arg['title'], iconImage=img_link('default','icon'))
     if arg['mode'] != 'play':
-        arg['url'] = build_url({'mode': arg['mode'],'title': arg['title'], 'folderurl': arg['url']})
+        arg['url'] = build_url({'mode': arg['mode'],'title': arg['title'], 'level': str(flevel+1), 'folderurl': arg['url']})
         isFolder = True
     else:
         isFolder = False
-        #li.setProperty("IsPlayable", "true")
+    li = xbmcgui.ListItem(label=arg['title'])
     info = {
-        'plot': arg['plot'],
+        'mediatype': 'tvshow',
+        'plot': arg['plot']
     }
     li.setInfo('video', info)
 
@@ -92,7 +116,7 @@ def addVideoDir(url):
     if len(match_plot) < 1: match_plot = [' ']
     arg = {
         'thumb': re.sub(r'_w\w+', '_w512_r1.jpg', match1[0][1]),
-        'fanart': re.sub(r'_w\w+', '_w1920_r1.jpg', match1[0][1]),
+        'fanart': re.sub(r'_w\w+', '_w1280_r1.jpg', match1[0][1]),
         'mode': 'play',
         'title': re.sub('&quot;', '"', match_title[0]),
         'plot': re.sub('&quot;', '"', match_plot[0]),
@@ -100,7 +124,6 @@ def addVideoDir(url):
 
     }
     addDir(arg)
-
 
 def readPage(url):
     req = urllib2.Request(url)
@@ -110,10 +133,8 @@ def readPage(url):
     response.close()
     return page
 
-
-
-if mode is None:
-    for mode, title, name, url, plot in main_menu:
+def showMenu (menu):
+    for mode, title, name, url, plot in menu:
         arg = {
             'thumb': img_link(name, 'thumb'),
             'fanart': img_link(name, 'fanart'),
@@ -125,34 +146,57 @@ if mode is None:
         addDir(arg)
     xbmcplugin.endOfDirectory(addon_handle)
 
-elif mode[0] == 'last_vids_fldr':
-    page = readPage(site_url + furl[0])
-    match = re.compile('width-img size-[2|3]">\n'
-                       '<a href="(.+?)"\n'
-                       'class="img-wrapper"').findall(page)
-    for url in match:
-        addVideoDir(url)
+if mode is None:
+    showMenu(main_menu)
 
-    if ftitle[0] != 'Последние эфиры':
-        arg = {'thumb': img_link('live', 'thumb'),
-               'fanart': img_link('live', 'fanart'),
-               'mode': 'all_vids_fldr',
-               'title': '>>>... Архив. '+ ftitle[0],
-               'plot': 'Видео за все даты',
+elif mode[0] == 'tvshows':
+    showMenu(tvshows)
+
+elif mode[0] == 'lastvids+next':
+    page = readPage(site_url + re.sub(r'.html', '/pc30.html', furl[0]))
+    match = re.compile('width-img size-[2-3]">\n'
+                       '<a href="(.+?)"').findall(page)
+    llast = flevel*12
+    if llast > len(match): llast = len(match)
+    for lnum in range(llast-12, llast):
+        addVideoDir(match[lnum])
+    if llast < len(match):
+        arg = {'thumb': img_link('folder', 'thumb'),
+               'fanart': img_link('folder', 'fanart'),
+               'mode': 'lastvids+next',
+               'title': '[B]>> Дальше... (' + str(flevel+1)+')[/B]',
+               'plot': '',
                'url': furl[0]
               }
         addDir(arg)
     xbmcplugin.endOfDirectory(addon_handle)
 
-elif mode[0] == 'all_vids_fldr':
+elif mode[0] == 'lastvids+archive':
+    page = readPage(site_url + furl[0])
+    match = re.compile('width-img size-[2-3]">\n'
+                       '<a href="(.+?)"').findall(page)
+
+    for url in match:
+        addVideoDir(url)
+    arg = {'thumb': img_link('folder', 'thumb'),
+           'fanart': img_link('folder', 'fanart'),
+           'mode': 'allvids_archive',
+           'title': '[B]>>>... Архив. '+ ftitle[0]+'[/B]',
+           'plot': 'Видео за все даты',
+           'url': furl[0]
+          }
+    addDir(arg)
+    xbmcplugin.endOfDirectory(addon_handle)
+
+elif mode[0] == 'allvids_archive':
     page = readPage(site_url + re.sub(r'.html', '/pc1000.html', furl[0]))
     match1 = re.compile('</a>\n<div class="content">\n'
                        '<span class="date" >(.+?)</span>\n'
                        '<a href="(.+?)" >\n<h4>\n').findall(page)
     for date, url in match1:
         arg = {
-            'thumb': img_link('live', 'thumb'),
-            'fanart': img_link('live', 'fanart'),
+            'thumb': img_link('folder', 'thumb'),
+            'fanart': img_link('folder', 'fanart'),
             'mode': 'video',
             'title': date+' | '+ftitle[0],
             'plot': '',
@@ -163,6 +207,4 @@ elif mode[0] == 'all_vids_fldr':
 
 elif mode[0] == 'video':
     addVideoDir(furl[0])
-
     xbmcplugin.endOfDirectory(addon_handle)
-
