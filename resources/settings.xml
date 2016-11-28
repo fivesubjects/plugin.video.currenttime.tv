@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="Общие">
+	    <setting id="res_stream" type="select" label="Качестово воспроизведения прямого эфира" values="1080p|720p|540p|404p|288p" default="1080p"/>
+	    <setting id="res_video" type="select" label="Качестово воспроизведения архива" values="720p|360p|270p" default="720p"/>
+        <setting id="default_view"  label="Принудительные виды в Сonfluence и Estuary" type="bool" default="true"/>
+ 
+    </category>
+
+</settings>
