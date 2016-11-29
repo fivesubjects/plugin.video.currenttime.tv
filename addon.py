@@ -61,6 +61,8 @@ tvshows = ([['lastvids+archive', 'Час Тимура Олевского', 'olev
 default_view = {
     'skin.confluence': {'main_menu': '50', 'tvshows': '500', 'lastvids+next': '515', 'lastvids+archive': '515',
                         'allvids_archive': '51', 'video': '51'},
+    'skin.aeon.nox.5': {'main_menu': '50', 'tvshows': '50', 'lastvids+next': '510', 'lastvids+archive': '510',
+                        'allvids_archive': '50', 'video': '510'},
     'skin.estuary': {'main_menu': '502', 'tvshows': '500', 'lastvids+next': '502', 'lastvids+archive': '502',
                      'allvids_archive': '55', 'video': '502'}
 }
