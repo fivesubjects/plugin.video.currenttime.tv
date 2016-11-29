@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.currenttime.tv" name="Телеканал Настоящее Время" version="0.0.1" provider-name="dicoka@ukr.net">
+<addon id="plugin.video.currenttime.tv" name="CURRENTTIME.TV" version="0.0.1" provider-name="dicoka@ukr.net">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -7,22 +7,11 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary>Архив телепрограмм, видео и прямой эфир ТВ канала "Настоящее Время" - WWW.CURRENTTIME.TV</summary>
-    <description>Настоящее Время – это 24-часовое телевизионное и интернет вещание, ориентированное на русскоязычную аудиторию в России, странах Центральной и Восточной Европы, а также по всему миру. Настоящее Время – совместный медиапроект Радио Свобода/Свободная Европа и "Голоса Америки".
-    </description>
-    <disclaimer lang="ru_ru"></disclaimer>
-    <language></language>
+    <summary lang="ru">ТВ канал "Настоящее Время - архив телепрограмм, видео и прямой эфир</summary>
+	<summary lang="en">Current Time TV channel - live stream, video and tv programs archive</summary>
+    <description lang="ru">Настоящее Время – это 24-часовое телевизионное и интернет вещание, ориентированное на русскоязычную аудиторию в России, странах Центральной и Восточной Европы, а также по всему миру. Настоящее Время рассказывает о том, что вас волнует. Мы предоставляем точную и беспристрастную информацию, основанную на фактах. Мы стараемся быть объективными и даем высказаться всем сторонам, предлагаем полный спектр мнений и комментариев по спорным вопросам. Особое внимание мы обращаем на темы, которые обходят стороной официальные СМИ разных стран.</description>
+	<description lang="en">Current Time TV is an international TV channel for Russian-speaking audiences covering important events for people worldwide. We endeavor to provide objective, accurate and impartial information, based on all the available facts. Current Time TV provides an opportunity to speak to all parties, and highlight the latest topics that are posted in the global media.</description>
+	<disclaimer lang="ru_ru"></disclaimer>
     <platform>all</platform>
-    <license></license>
-    <forum></forum>
-    <website></website>
-    <email></email>
-    <source></source>
-    <news></news>
-    <assets>
-        <icon></icon>
-        <fanart></fanart>
-        <screenshot></screenshot>
-    </assets>
   </extension>
 </addon>

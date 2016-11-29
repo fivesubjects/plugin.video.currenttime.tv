@@ -63,14 +63,9 @@ default_view = {
                         'allvids_archive': '51', 'video': '51'},
     'skin.aeon.nox.5': {'main_menu': '50', 'tvshows': '50', 'lastvids+next': '510', 'lastvids+archive': '510',
                         'allvids_archive': '50', 'video': '510'},
-    'skin.estuary': {'main_menu': '502', 'tvshows': '500', 'lastvids+next': '502', 'lastvids+archive': '502',
+    'skin.estuary': {'main_menu': '55', 'tvshows': '500', 'lastvids+next': '502', 'lastvids+archive': '502',
                      'allvids_archive': '55', 'video': '502'}
 }
-# Confuence ('51') "BigList" FullWidthList view,
-# Confuence ('50') "BigList" FullWidthList view
-# Confuence ('500'  "Thumbnails" view
-# Confuence ('515') "MediInfo3" MediaListView4 view
-
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
@@ -84,11 +79,10 @@ fname = args.get('name', None)
 site_url = 'http://www.currenttime.tv'
 ptv = xbmcaddon.Addon('plugin.video.currenttime.tv')
 
-xbmcplugin.setContent(addon_handle,
-                      'tvshows')  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+xbmcplugin.setContent(addon_handle, 'tvshows')  # !!!
 
 
-# xbmcplugin.setPluginCategory(addon_handle), 'tv') # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# xbmcplugin.setPluginCategory(addon_handle), 'tv') # !!!
 
 
 def build_url(query):
@@ -111,15 +105,12 @@ def addDir(arg):
             {'mode': arg['mode'], 'title': arg['title'], 'name': arg['name'], 'level': str(flevel + 1),
              'folderurl': arg['url']})
         isFolder = True
-        li.setProperty("IsPlayable",
-                       "false")  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        li.setProperty("IsPlayable", "false")  # !!!
     else:
         isFolder = False
-        li.setProperty("IsPlayable",
-                       "false")  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        li.setProperty("IsPlayable", "false")  # !!!
     info = {
-        'mediatype': 'tvshow',
-        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        'mediatype': 'tvshow',                 # !!!
         'plot': arg['plot']
     }
     li.setInfo('video', info)
@@ -171,7 +162,6 @@ def showMenu(menu):
         }
         addDir(arg)
     xbmcplugin.endOfDirectory(addon_handle)
-
 
 if mode is None:  # Main menu
     mode = ['main_menu']
@@ -247,7 +237,6 @@ elif mode[0] == 'allvids_archive':
         }
         addDir(arg)
     xbmcplugin.endOfDirectory(addon_handle)
-
 
 elif mode[0] == 'video':
     addVideoDir(furl[0])
