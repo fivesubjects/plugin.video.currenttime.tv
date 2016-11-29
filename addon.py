@@ -61,7 +61,7 @@ tvshows = ([['lastvids+archive', 'Час Тимура Олевского', 'olev
 default_view = {
     'skin.confluence': {'main_menu': '50', 'tvshows': '500', 'lastvids+next': '515', 'lastvids+archive': '515',
                         'allvids_archive': '51', 'video': '51'},
-    'skin.estuary': {'main_menu': '55', 'tvshows': '500', 'lastvids+next': '502', 'lastvids+archive': '502',
+    'skin.estuary': {'main_menu': '502', 'tvshows': '500', 'lastvids+next': '502', 'lastvids+archive': '502',
                      'allvids_archive': '55', 'video': '502'}
 }
 # Confuence ('51') "BigList" FullWidthList view,
@@ -190,7 +190,7 @@ elif mode[0] == 'tvshows':
 
 elif mode[0] == 'lastvids+next':
     page = readPage(site_url + re.sub(r'.html', '/pc30.html', furl[0]))
-    match = re.compile('width-img size-[2-3]">\n'
+    match = re.compile('<span class="date" >.+</span>\n'
                        '<a href="(.+?)"').findall(page)
     llast = flevel * 12
     if llast > len(match): llast = len(match)
@@ -211,7 +211,7 @@ elif mode[0] == 'lastvids+next':
 
 elif mode[0] == 'lastvids+archive':
     page = readPage(site_url + furl[0])
-    match = re.compile('width-img size-[2-3]">\n'
+    match = re.compile('<span class="date" >.+</span>\n'
                        '<a href="(.+?)"').findall(page)
 
     for url in match:
