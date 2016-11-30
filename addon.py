@@ -58,10 +58,6 @@ addon = xbmcaddon.Addon('plugin.video.currenttime.tv')
 
 xbmcplugin.setContent(addon_handle, 'tvshows')  # !!!
 
-
-# xbmcplugin.setPluginCategory(addon_handle), 'tv') # !!!
-
-
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 

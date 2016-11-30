@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30001"
 msgid "[B]Live Stream[/B]"
-msgstr ""
+msgstr "[B]Прямой эфир[/B]"
 
 msgctxt "#30002"
 msgid "Current Time TV channel - live stream online"
@@ -165,21 +165,21 @@ msgstr "Ждем в гости с Зурабом Двали"
 
 
 msgctxt "#30101"
-msgid "Дальше"
-msgstr "Next"
+msgid "Next"
+msgstr "Дальше"
 
 msgctxt "#30102"
-msgid "Дальше"
-msgstr "Next"
+msgid "More videos"
+msgstr "Перейти к следующим видео"
 
 
 msgctxt "#30103"
-msgid "Архив"
-msgstr "Archive"
+msgid "Archive"
+msgstr "Архив"
 
 msgctxt "#30104"
-msgid "Видео за все даты"
-msgstr "Videos for all dates"
+msgid "All dates videos archive"
+msgstr "Видео за все даты"
 
 
 msgctxt "#30901"
