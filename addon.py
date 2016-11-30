@@ -16,48 +16,25 @@ video_url = {
     '360p': '/index_1_av.m3u8',
     '270p': '/index_0_av.m3u8'
 }
-main_menu = ([['lastvids+next', '[B]Эфиры [/B]', 'folder', '/z/17317.html', 'Эфиры телепередач'],
-              ['tvshows', '[B]Телепередачи[/B]', 'folder', '', 'Все телепередачи'],
-              ['lastvids+next', '[B]Все видео[/B]', 'folder', '/z/17192.html', 'Все видео'],
-              ['lastvids+next', '[B]Видео: Кадры дня[/B]', 'folder', '/z/17226.html', 'Кадры дня'],
-              ['lastvids+next', '[B]Видео: Репортажи[/B]', 'folder', '/z/17318.html', 'Репортажи'],
-              ['lastvids+next', '[B]Видео: Интервью[/B]', 'folder', '/z/17319.html', 'Мнения']
-              ])
-tvshows = ([['lastvids+archive', 'Час Тимура Олевского', 'olevski', '/z/20333.html',
-             'Ежедневная телепередача \"Час Тимура Олевского\".\n'
-             'Час Тимура Олевского – это самые интересные и важные события, за которыми следит команда наших журналистов. Мы не бежим за новостями, а находим их для вас. Мы показываем все точки зрения и рассказываем обо всем, что случилось в конце рабочего дня. С понедельника по пятницу.\n'
-             ],
-            ['lastvids+archive', 'Настоящее Время - Европа', 'nveurope', '/z/18657.html',
-             'Ежедневная телепередача \"Настоящее Время\".'
-             ],
-            ['lastvids+archive', 'Настоящее Время – Азия', 'nvasia', '/z/17642.html',
-             'Ежедневная телепередача \"Настоящее Время – Азия\".'
-             ],
-            ['lastvids+archive', 'Настоящее Время – Америка', 'nvamerica', '/z/20347.html',
-             'Ежедневная телепередача \"Настоящее Время – Америка\".'
-             ],
-            ['lastvids+archive', 'Смотри в оба', 'oba', '/z/20366.html',
-             'Еженедельная передача \"Смотри в оба\".'
-             ],
-            ['lastvids+archive', 'Итоги', 'itogi', '/z/17499.html',
-             'Еженедельная итоговая телепередача \"Итоги\" (по субботам).'
-             ],
-            ['lastvids+archive', 'Неделя', 'week', '/z/17498.html',
-             'Еженедельная итоговая телепередача \"Неделя\" (по воскресеньям).'
-             ],
-            ['lastvids+archive', 'Балтия. Неделя', 'baltia', '/z/20350.html',
-             'Еженедельная итоговая передача \"Балтия. Неделя\" (по субботам).'
-             ],
-            ['lastvids+archive', 'Бизнес-план', 'bisplan', '/z/20354.html',
-             'Еженедельная передача \"Бизнес-план\".'
-             ],
-            ['lastvids+archive', 'Неизвестная Россия', 'unknownrus', '/z/20331.html',
-             'Цикл \"Неизвестная Россия\".'
-             ],
-            ['lastvids+archive', 'Ждем в гости', 'guests', '/z/20330.html',
-             'Ждем в гости с Зурабом Двали.'
-             ]
-            ])
+main_menu = ([[30003, 30004, 'lastvids+next', 	'folder', '/z/17317.html'],	#Broadcasts
+              [30005, 30006, 'tvshows',			'folder', ''],				#TV Shows
+              [30007, 30008, 'lastvids+next', 	'folder', '/z/17192.html'],	#All Videos
+              [30009, 30010, 'lastvids+next', 	'folder', '/z/17226.html'],	#Daily Shoots
+              [30011, 30012, 'lastvids+next', 	'folder', '/z/17318.html'],	#Reportages
+              [30013, 30014, 'lastvids+next', 	'folder', '/z/17319.html']	#Interviews
+             ])
+tvshows =   ([[30031, 30032, 'lastvids+archive', 'olevski',		'/z/20333.html'],
+              [30033, 30034, 'lastvids+archive', 'nveurope', 	'/z/18657.html'],
+              [30035, 30036, 'lastvids+archive', 'nvasia', 		'/z/17642.html'],
+              [30037, 30038, 'lastvids+archive', 'nvamerica',	'/z/20347.html'],
+              [30039, 30040, 'lastvids+archive', 'oba', 		'/z/20366.html'],
+              [30041, 30042, 'lastvids+archive', 'itogi', 		'/z/17499.html'],
+              [30043, 30044, 'lastvids+archive', 'week', 		'/z/17498.html'],
+              [30045, 30046, 'lastvids+archive', 'baltia', 		'/z/20350.html'],
+              [30047, 30048, 'lastvids+archive', 'bisplan', 	'/z/20354.html'],
+              [30049, 30050, 'lastvids+archive', 'unknownrus',	'/z/20331.html'],
+              [30051, 30052, 'lastvids+archive', 'guests', 		'/z/20330.html']
+             ])
 default_view = {
     'skin.confluence': {'main_menu': '50', 'tvshows': '500', 'lastvids+next': '515', 'lastvids+archive': '515',
                         'allvids_archive': '51', 'video': '51'},
@@ -77,7 +54,7 @@ ftitle = args.get('title', None)
 flevel = int(args.get('level', '0')[0])
 fname = args.get('name', None)
 site_url = 'http://www.currenttime.tv'
-ptv = xbmcaddon.Addon('plugin.video.currenttime.tv')
+addon = xbmcaddon.Addon('plugin.video.currenttime.tv')
 
 xbmcplugin.setContent(addon_handle, 'tvshows')  # !!!
 
@@ -94,7 +71,7 @@ def img_link(name, type):
         ext = '.jpg'
     else:
         ext = '.png'
-    image = os.path.join(ptv.getAddonInfo('path'), "resources/media/" + name + '_' + type + ext)
+    image = os.path.join(addon.getAddonInfo('path'), "resources/media/" + name + '_' + type + ext)
     return image
 
 
@@ -150,15 +127,15 @@ def readPage(url):
 
 
 def showMenu(menu):
-    for mode, title, name, url, plot in menu:
+    for title, plot, mode, name, url in menu:
         arg = {
-            'name': name,
-            'thumb': img_link(name, 'thumb'),
-            'fanart': img_link(name, 'fanart'),
-            'mode': mode,
-            'title': title,
-            'plot': plot,
-            'url': url
+            'name': 	name,
+            'thumb': 	img_link(name, 'thumb'),
+            'fanart': 	img_link(name, 'fanart'),
+            'mode': 	mode,
+            'title': 	addon.getLocalizedString(title).encode('utf-8'),
+            'plot': 	addon.getLocalizedString(plot).encode('utf-8'),
+            'url': 		url
         }
         addDir(arg)
     xbmcplugin.endOfDirectory(addon_handle)
@@ -170,8 +147,8 @@ if mode is None:  # Main menu
         'thumb': img_link('live', 'thumb'),
         'fanart': img_link('live', 'fanart'),
         'mode': 'play',
-        'title': '[B][COLOR blue]Прямой эфир[/COLOR][/B]',
-        'plot': 'Круглосуточный телеканал "Настоящее Время" - прямая трасляция онлайн',
+        'title': '[COLOR blue]' + addon.getLocalizedString(30001).encode('utf-8') + '[/COLOR]',
+        'plot': addon.getLocalizedString(30002).encode('utf-8'),
         'url': stream_url[xbmcplugin.getSetting(addon_handle,'res_stream')],
     }
     addDir(arg)
@@ -194,8 +171,8 @@ elif mode[0] == 'lastvids+next':
             'thumb': img_link('folder', 'thumb'),
             'fanart': img_link(fname[0], 'fanart'),
             'mode': 'lastvids+next',
-            'title': '[B][COLOR blue]>> Дальше... (' + str(flevel + 1) + ')[/COLOR][/B]',
-            'plot': '',
+            'title': '[B][COLOR blue]>> ' + addon.getLocalizedString(30101).encode('utf-8') + '... (' + str(flevel+1) + ')[/COLOR][/B]', # Next
+            'plot': addon.getLocalizedString(30102),
             'url': furl[0]
             }
         addDir(arg)
@@ -213,8 +190,8 @@ elif mode[0] == 'lastvids+archive':
         'thumb': img_link('folder', 'thumb'),
         'fanart': img_link(fname[0], 'fanart'),
         'mode': 'allvids_archive',
-        'title': '[B][COLOR blue]Архив. ' + ftitle[0] + '[/COLOR][/B]',
-        'plot': 'Видео за все даты',
+        'title': '[B][COLOR blue]' + addon.getLocalizedString(30103).encode('utf-8') + '. ' + ftitle[0] + '[/COLOR][/B]', # Archive
+        'plot': addon.getLocalizedString(30104).encode('utf-8'),
         'url': furl[0]
     }
     addDir(arg)

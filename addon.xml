@@ -7,11 +7,15 @@
     <provides>video</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
+	<summary lang="en">Current Time TV channel - live stream, video and tv programmes archive</summary>
     <summary lang="ru">ТВ канал "Настоящее Время - архив телепрограмм, видео и прямой эфир</summary>
-	<summary lang="en">Current Time TV channel - live stream, video and tv programs archive</summary>
-    <description lang="ru">Настоящее Время – это 24-часовое телевизионное и интернет вещание, ориентированное на русскоязычную аудиторию в России, странах Центральной и Восточной Европы, а также по всему миру. Настоящее Время рассказывает о том, что вас волнует. Мы предоставляем точную и беспристрастную информацию, основанную на фактах. Мы стараемся быть объективными и даем высказаться всем сторонам, предлагаем полный спектр мнений и комментариев по спорным вопросам. Особое внимание мы обращаем на темы, которые обходят стороной официальные СМИ разных стран.</description>
-	<description lang="en">Current Time TV is an international TV channel for Russian-speaking audiences covering important events for people worldwide. We endeavor to provide objective, accurate and impartial information, based on all the available facts. Current Time TV provides an opportunity to speak to all parties, and highlight the latest topics that are posted in the global media.</description>
+    <description lang="ru">Настоящее Время – это 24-часовое телевизионное и интернет вещание, ориентированное на русскоязычную аудиторию в России, странах Центральной и Восточной Европы, а также по всему миру.Настоящее Время – совместный медиапроект Радио Свобода/Свободная Европа и "Голоса Америки".</description>
+	<description lang="en">"Current Time" is an international TV channel for Russian-speaking audiences covering important events for people worldwide. Current Time is a joint production of Radio Free Europe/Radio Liberty and the Voice of America.</description>
 	<disclaimer lang="ru_ru"></disclaimer>
     <platform>all</platform>
+	<language></language>
+	<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+	<news>- First try</news>
+
   </extension>
 </addon>
