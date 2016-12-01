@@ -178,7 +178,7 @@ msgid "Archive"
 msgstr "Архив"
 
 msgctxt "#30104"
-msgid "All dates videos archive"
+msgid "All dates video archive"
 msgstr "Видео за все даты"
 
 
