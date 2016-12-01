@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys, os
-import urllib, urlparse
+import urllib, urlparse, urllib2, re
 import xbmcgui, xbmc, xbmcaddon, xbmcplugin
-import urllib2, re
 
 stream_url = {
     '1080p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_1080_av-p.m3u8',
@@ -81,13 +80,12 @@ def addDir(arg):
         li.setProperty("IsPlayable", "false")  # !!!
     else:
         isFolder = False
-        li.setProperty("IsPlayable", "false")  # !!!
+        li.setProperty("IsPlayable", "true")  # !!!
     info = {
         'mediatype': 'tvshow',                 # !!!
         'plot': arg['plot']
     }
     li.setInfo('video', info)
-
     li.setArt({'thumb': arg['thumb'], 'fanart': arg['fanart']})
     ok = xbmcplugin.addDirectoryItem(handle=addon_handle, url=arg['url'], listitem=li, isFolder=isFolder)
     return ok
@@ -100,16 +98,15 @@ def addVideoDir(url):
     match_title = re.compile('<meta name="title" content="(.+?)" />').findall(page)
     match_plot = re.compile('<meta name="description" content="(.+?)" />', re.DOTALL).findall(page)
     if len(match_plot) < 1: match_plot = [' ']
-    arg = {
-        'name': fname[0],
-        'thumb': re.sub(r'_w\w+', '_w512_r1.jpg', match1[0][1]),
-        'fanart': re.sub(r'_w\w+', '_w1280_r1.jpg', match1[0][1]),
-        'mode': 'play',
-        'title': re.sub('&quot;', '"', match_title[0]),
-        'plot': re.sub('&quot;', '"', match_plot[0]),
-        'url': re.sub('/master.m3u8', video_url[xbmcplugin.getSetting(addon_handle, 'res_video')], match1[0][0])
-    }
-    addDir(arg)
+    addDir({
+        'name':     fname[0],
+        'thumb':    re.sub(r'_w\w+', '_w512_r1.jpg', match1[0][1]),
+        'fanart':   re.sub(r'_w\w+', '_w1280_r1.jpg', match1[0][1]),
+        'mode':     'play',
+        'title':    re.sub('&quot;', '"', match_title[0]),
+        'plot':     re.sub('&quot;', '"', match_plot[0]),
+        'url':      re.sub('/master.m3u8', video_url[xbmcplugin.getSetting(addon_handle, 'res_video')], match1[0][0])
+    })
 
 
 def readPage(url):
@@ -124,35 +121,36 @@ def readPage(url):
 
 def showMenu(menu):
     for title, plot, mode, name, url in menu:
-        arg = {
-            'name': 	name,
-            'thumb': 	img_link(name, 'thumb'),
-            'fanart': 	img_link(name, 'fanart'),
-            'mode': 	mode,
-            'title': 	addon.getLocalizedString(title).encode('utf-8'),
-            'plot': 	addon.getLocalizedString(plot).encode('utf-8'),
-            'url': 		url
-        }
-        addDir(arg)
+        addDir({
+            'name':    name,
+            'thumb':   img_link(name, 'thumb'),
+            'fanart':  img_link(name, 'fanart'),
+            'mode':    mode,
+            'title':   addon.getLocalizedString(title).encode('utf-8'),
+            'plot':    addon.getLocalizedString(plot).encode('utf-8'),
+            'url':     url
+        })
     xbmcplugin.endOfDirectory(addon_handle)
 
-if mode is None:  # Main menu
+# Main menu
+if mode is None:
     mode = ['main_menu']
-    arg = {
-        'name': 'live',
-        'thumb': img_link('live', 'thumb'),
-        'fanart': img_link('live', 'fanart'),
-        'mode': 'play',
-        'title': '[COLOR blue]' + addon.getLocalizedString(30001).encode('utf-8') + '[/COLOR]',
-        'plot': addon.getLocalizedString(30002).encode('utf-8'),
-        'url': stream_url[xbmcplugin.getSetting(addon_handle,'res_stream')],
-    }
-    addDir(arg)
+    addDir({
+        'name':    'live',
+        'thumb':   img_link('live', 'thumb'),
+        'fanart':  img_link('live', 'fanart'),
+        'mode':    'play',
+        'title':   '[COLOR blue]' + addon.getLocalizedString(30001).encode('utf-8') + '[/COLOR]',
+        'plot':    addon.getLocalizedString(30002).encode('utf-8'),
+        'url':     stream_url[xbmcplugin.getSetting(addon_handle,'res_stream')],
+    })
     showMenu(main_menu)
 
+# TV Programmes menu
 elif mode[0] == 'tvshows':
     showMenu(tvshows)
 
+# List videos with NEXT link
 elif mode[0] == 'lastvids+next':
     page = readPage(site_url + re.sub(r'.html', '/pc30.html', furl[0]))
     match = re.compile('<span class="date" >.+</span>\n'
@@ -162,18 +160,18 @@ elif mode[0] == 'lastvids+next':
     for lnum in range(llast - 12, llast):
         addVideoDir(match[lnum])
     if llast < len(match):
-        arg = {
-            'name': fname[0],
-            'thumb': img_link('folder', 'thumb'),
-            'fanart': img_link(fname[0], 'fanart'),
-            'mode': 'lastvids+next',
-            'title': '[B][COLOR blue]>> ' + addon.getLocalizedString(30101).encode('utf-8') + '... (' + str(flevel+1) + ')[/COLOR][/B]', # Next
-            'plot': addon.getLocalizedString(30102),
-            'url': furl[0]
-            }
-        addDir(arg)
+        addDir({
+            'name':     fname[0],
+            'thumb':    img_link('folder', 'thumb'),
+            'fanart':   img_link(fname[0], 'fanart'),
+            'mode':     'lastvids+next',
+            'title':    '[B][COLOR blue]>> ' + addon.getLocalizedString(30101).encode('utf-8') + '... (' + str(flevel+1) + ')[/COLOR][/B]', # Next
+            'plot':     addon.getLocalizedString(30102),
+            'url':      furl[0]
+        })
     xbmcplugin.endOfDirectory(addon_handle)
 
+# List videos with ARCHIVE link
 elif mode[0] == 'lastvids+archive':
     page = readPage(site_url + furl[0])
     match = re.compile('<span class="date" >.+</span>\n'
@@ -181,40 +179,41 @@ elif mode[0] == 'lastvids+archive':
 
     for url in match:
         addVideoDir(url)
-    arg = {
-        'name': fname[0],
-        'thumb': img_link('folder', 'thumb'),
-        'fanart': img_link(fname[0], 'fanart'),
-        'mode': 'allvids_archive',
-        'title': '[B][COLOR blue]' + addon.getLocalizedString(30103).encode('utf-8') + '. ' + ftitle[0] + '[/COLOR][/B]', # Archive
-        'plot': addon.getLocalizedString(30104).encode('utf-8'),
-        'url': furl[0]
-    }
-    addDir(arg)
+    addDir({
+        'name':    fname[0],
+        'thumb':   img_link('folder', 'thumb'),
+        'fanart':  img_link(fname[0], 'fanart'),
+        'mode':    'allvids_archive',
+        'title':   '[B][COLOR blue]' + addon.getLocalizedString(30103).encode('utf-8') + '. ' + ftitle[0] + '[/COLOR][/B]', # Archive
+        'plot':    addon.getLocalizedString(30104).encode('utf-8'),
+        'url':     furl[0]
+    })
     xbmcplugin.endOfDirectory(addon_handle)
 
+# List ARCHIVE
 elif mode[0] == 'allvids_archive':
     page = readPage(site_url + re.sub(r'.html', '/pc1000.html', furl[0]))
     match1 = re.compile('</a>\n<div class="content">\n'
                         '<span class="date" >(.+?)</span>\n'
                         '<a href="(.+?)" >\n<h4>\n').findall(page)
     for date, url in match1:
-        arg = {
-            'name': fname[0],
-            'thumb': img_link('folder', 'thumb'),
-            'fanart': img_link(fname[0], 'fanart'),
-            'mode': 'video',
-            'title': date,  # +' | '+ftitle[0],
-            'plot': ftitle[0],
-            'url': url
-        }
-        addDir(arg)
+        addDir({
+            'name':    fname[0],
+            'thumb':   img_link('folder', 'thumb'),
+            'fanart':  img_link(fname[0], 'fanart'),
+            'mode':    'video',
+            'title':   date,  # +' | '+ftitle[0],
+            'plot':    ftitle[0],
+            'url':     url
+        })
     xbmcplugin.endOfDirectory(addon_handle)
 
+# List ONE video from archive
 elif mode[0] == 'video':
     addVideoDir(furl[0])
     xbmcplugin.endOfDirectory(addon_handle)
 
+# Set default view
 if xbmcplugin.getSetting(addon_handle, 'default_view') == 'true':
     try:
         xbmc.executebuiltin('Container.SetViewMode(' + default_view[xbmc.getSkinDir()][mode[0]] + ')')
