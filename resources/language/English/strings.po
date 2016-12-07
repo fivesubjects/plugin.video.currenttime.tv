@@ -198,6 +198,14 @@ msgctxt "#30904"
 msgid "Use Default Views in Сonfluence, Estuary, AeonNox5"
 msgstr ""
 
+msgctxt "#30905"
+msgid "Download Fanart"
+msgstr ""
+
+msgctxt "#30906"
+msgid "Download Thumbnails"
+msgstr ""
+
 
 
 
