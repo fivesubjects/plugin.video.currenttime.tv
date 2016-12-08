@@ -182,6 +182,11 @@ msgid "All dates video archive"
 msgstr ""
 
 
+msgctxt "#30801"
+msgid "Connection Error"
+msgstr ""
+
+
 msgctxt "#30901"
 msgid "General"
 msgstr ""
@@ -205,6 +210,7 @@ msgstr ""
 msgctxt "#30906"
 msgid "Download Thumbnails"
 msgstr ""
+
 
 
 
