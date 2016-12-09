@@ -58,8 +58,9 @@ default_view = {
 }
 
 NUM_OF_PARALLEL_REQ = 12    #queue size
+MAX_REQ_TRIES = 3
 MAX_ITEMS_TO_SHOW = 12
-dir_items_buffer = [None] * 30
+video_pages_buffer = [None] * 30
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
@@ -111,9 +112,8 @@ def add_dir(arg):
     return ok
 
 
-def get_video_dir(page_url):
+def get_video_dir(page):
     try:
-        page = read_page(page_url, 3)
         if page is None:
             raise Exception
         match = re.compile('<a class="html5PlayerImage" href="(.+?)">\n'
@@ -141,13 +141,13 @@ def get_video_dir(page_url):
         return None
 
 
-def get_video_dir_thread(page_url, where_to_put, index_to_put):
-        where_to_put[index_to_put] = get_video_dir(site_url + page_url)
+def get_video_page_thread(page_url, where_to_put, index_to_put):
+        where_to_put[index_to_put] = read_page(page_url)
         queue.get(True, None)
         queue.task_done()
 
 
-def read_page(page_url, tries=1):
+def read_page(page_url, tries=MAX_REQ_TRIES):
     req = urllib2.Request(page_url)
     req.add_header('User-Agent',
                    ' Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
@@ -157,7 +157,10 @@ def read_page(page_url, tries=1):
             page = response.read()
             return page
         except:
-            xbmc.sleep(1000)
+            if t < (tries - 1):
+                xbmc.sleep(1000)
+            else:
+                break
         finally:
             response.close()
     return None
@@ -198,27 +201,28 @@ try:
 
     ### List videos with NEXT link
     elif mode == 'lastvids+next':
-        page = read_page(site_url + re.sub(r'.html', '/pc30.html', folder_url), 3)
-        match = re.compile('<span class="date" >.+</span>\n'
+        page = read_page(site_url + re.sub(r'.html', '/pc30.html', folder_url))
+        match_url = re.compile('<span class="date" >.+</span>\n'
                            '<a href="(.+?)"').findall(page)
 
         queue = Queue.Queue(NUM_OF_PARALLEL_REQ)
         llast = folder_level * MAX_ITEMS_TO_SHOW
-        if llast > len(match):
-            llast = len(match)
+        if llast > len(match_url):
+            llast = len(match_url)
         for lnum in range(llast - MAX_ITEMS_TO_SHOW, llast):
             queue.put(1, True, None)
             t = threading.Thread(
-                target=get_video_dir_thread, args=(match[lnum], dir_items_buffer, lnum - llast + MAX_ITEMS_TO_SHOW))
+                target=get_video_page_thread,
+                args=(site_url + match_url[lnum], video_pages_buffer, lnum - llast + MAX_ITEMS_TO_SHOW))
             t.daemon = True
             t.start()
         # now block and wait until all request tasks are done
         queue.join()
         for lnum in range(0, MAX_ITEMS_TO_SHOW):
-            if dir_items_buffer[lnum] is not None:
-                add_dir(dir_items_buffer[lnum])
+            if video_pages_buffer[lnum] is not None:
+                add_dir(get_video_dir(video_pages_buffer[lnum]))
         # add menu item 'Next'
-        if llast < len(match):
+        if llast < len(match_url):
             add_dir({
                 'name':     folder_name,
                 'thumb':    img_link('folder', 'thumb'),
@@ -233,22 +237,22 @@ try:
 
     ### List videos with ARCHIVE link
     elif mode == 'lastvids+archive':
-        page = read_page(site_url + folder_url, 3)
-        match = re.compile('<span class="date" >.+</span>\n'
+        page = read_page(site_url + folder_url)
+        match_url = re.compile('<span class="date" >.+</span>\n'
                            '<a href="(.+?)"').findall(page)
         queue = Queue.Queue(NUM_OF_PARALLEL_REQ)
         i = 0
-        for url in match:
+        for url in match_url:
             queue.put(1, True, None)
-            t = threading.Thread(target=get_video_dir_thread, args=(url, dir_items_buffer, i))
+            t = threading.Thread(target=get_video_page_thread, args=(site_url + url, video_pages_buffer, i))
             t.daemon = True
             t.start()
             i += 1
         # now block and wait until all request tasks are done
         queue.join()
         for lnum in range(0, i):
-            if dir_items_buffer[lnum] is not None:
-                add_dir(dir_items_buffer[lnum])
+            if video_pages_buffer[lnum] is not None:
+                add_dir(get_video_dir(video_pages_buffer[lnum]))
         # add menu item 'Archive'
         add_dir({
             'name':     folder_name,
@@ -264,7 +268,7 @@ try:
 
     ### List ARCHIVE
     elif mode == 'allvids_archive':
-        page = read_page(site_url + re.sub(r'.html', '/pc1000.html', folder_url), 3)
+        page = read_page(site_url + re.sub(r'.html', '/pc1000.html', folder_url))
         match = re.compile('</a>\n<div class="content">\n'
                            '<span class="date" >(.+?)</span>\n'
                            '<a href="(.+?)" >\n<h4>\n').findall(page)
@@ -282,7 +286,7 @@ try:
 
     ### List ONE video from archive
     elif mode == 'video':
-        add_dir(get_video_dir(site_url + folder_url))
+        add_dir(get_video_dir(read_page(site_url + folder_url)))
         xbmcplugin.endOfDirectory(addon_handle)
 
     #### Set default view
