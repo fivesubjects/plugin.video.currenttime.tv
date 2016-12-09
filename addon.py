@@ -133,12 +133,26 @@ def get_video_dir(page):
             'thumb':    thumb,
             'fanart':   fanart,
             'mode':     'play',
-            'title':    re.sub('&quot;', '"', match_title[0]),
-            'plot':     re.sub('&quot;', '"', match_plot[0]),
+            'title':    re.sub('&.{0,5};', clean_txt, match_title[0]),
+            'plot':     re.sub('&.{0,5};', clean_txt, match_plot[0]),
             'url':      re.sub('/master.m3u8', video_url[xbmcplugin.getSetting(addon_handle, 'res_video')], match[0][0])
         }
     except:
         return None
+
+
+# clean html mess
+def clean_txt (matchobj):
+    try:
+        # remove first and last chars ('&' and ';')
+        str = matchobj.group(0)[1:-1]
+        # remove '#' if there is one
+        str = re.sub('#', '', str)
+        if str == ('quot' or 'QUOT'):
+            return '"'
+        return unichr(int(str)).encode('utf8')
+    except:
+        return ''
 
 
 def get_video_page_thread(page_url, where_to_put, index_to_put):
