@@ -57,7 +57,7 @@ default_view = {
          'allvids_archive': '55', 'video': '502'}
 }
 
-NUM_OF_PARALLEL_REQ = 12    #queue size
+NUM_OF_PARALLEL_REQ = 6    #queue size
 MAX_REQ_TRIES = 3
 MAX_ITEMS_TO_SHOW = 12
 video_pages_buffer = [None] * 30
@@ -80,19 +80,21 @@ xbmcplugin.setContent(addon_handle, 'tvshows')  # !!!
 
 
 def build_url(query):
+    """builds dir url"""
     return base_url + '?' + urllib.urlencode(query)
 
 
 def img_link(name, type):
+    """"builds full image path with given name and ext."""
     if type == 'fanart' or type == 'poster':
         ext = '.jpg'
     else:
         ext = '.png'
-    image = os.path.join(addon.getAddonInfo('path'), "resources/media/" + name + '_' + type + ext)
-    return image
+    return os.path.join(addon.getAddonInfo('path'), "resources/media/" + name + '_' + type + ext)
 
 
 def add_dir(arg):
+    """adds dir item by given in arg parameters"""
     li = xbmcgui.ListItem(label=arg['title'])
     if arg['mode'] != 'play':
         arg['url'] = build_url({'mode': arg['mode'], 'title': arg['title'], 'name': arg['name'],
@@ -113,6 +115,7 @@ def add_dir(arg):
 
 
 def get_video_dir(page):
+    """creates playable dir item after parsing page with video for corresponding details """
     try:
         if page is None:
             raise Exception
@@ -141,11 +144,11 @@ def get_video_dir(page):
         return None
 
 
-# clean html mess
-def clean_txt (matchobj):
+def clean_txt(str_to_clean):
+    """clean html mess from str, replace things like '&#code;' with corresponding symbol"""
     try:
-        # remove first and last chars ('&' and ';')
-        str = matchobj.group(0)[1:-1]
+        #remove first and last chars ('&' and ';')
+        str = str_to_clean.group(0)[1:-1]
         # remove '#' if there is one
         str = re.sub('#', '', str)
         if str == ('quot' or 'QUOT'):
