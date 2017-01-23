@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.currenttime.tv" name="CurrentTime.TV" version="1.0.1" provider-name="dicoka@ukr.net">
+<addon id="plugin.video.currenttime.tv" name="CurrentTime.TV" version="1.0.3" provider-name="dicoka@ukr.net">
   <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="xbmc.python" version="2.24.0"/>
   </requires>
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
@@ -16,7 +16,14 @@
     <platform>all</platform>
 	<language></language>
 	<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-	<news lang="en">Faster video folders download, new options added for disabling fanart and thumbnails download</news>
-	<news lang="ru">Увеличена скорость загрузка папок видео, добавлены новые установки для отключения загрузки фанарта и эскизов</news>
+	<news lang="en">Added "TV Listing" with schedule for today</news>
+	<news lang="ru">Добавлена "Телепрограмма" на текущие сутки</news>
+	<assets>
+        <icon>icon.png</icon>
+        <fanart>fanart.jpg</fanart>
+        <screenshot>resources\media\screenshoot1.jpg</screenshot>
+        <screenshot>resources\media\screenshoot2.jpg</screenshot>
+        <screenshot>resources\media\screenshoot3.jpg</screenshot>
+    </assets>
   </extension>
 </addon>
